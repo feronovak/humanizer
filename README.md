@@ -1,145 +1,88 @@
 # Humanizer
 
-A Claude Code skill that removes signs of AI-generated writing from text, making it sound more natural and human.
+A Claude Code skill for removing signs of AI-generated writing while preserving voice.
+
+> Fork of [blader/humanizer](https://github.com/blader/humanizer) with research
+> grounding, modular workflow, transition coherence, voice-ID, context calibration,
+> hybrid-input handling, detector lens, and Slovak language support. See
+> [NOTICE](NOTICE) for full attribution.
+
+## What's different from upstream
+
+- **Workflow restructure** — 9-step orchestrator (SKILL.md) instead of monolithic catalog
+- **Research grounding** — citations to Kobak et al. 2024, COLING 2025, CL 2025 survey
+- **Sentence-rhythm pattern** — top stylometric discriminator (replaces upstream's hyphenation pattern, which had no empirical support)
+- **Voice-ID step** — preserves writer signature, prevents tone-flattening (the #1 commercial humanizer failure)
+- **Transition-coherence check** — catches broken connective tissue after edits
+- **Soul toolkit** — six concrete techniques for adding voice (vs. vague "be human")
+- **Context calibration** — different edit intensity for technical / marketing / personal / regulatory content
+- **Hybrid input handling** — identifies already-human sections and leaves them alone
+- **Detector lens** — optional final stylometric check (Option C fallback)
+- **Slovak language overlay** — Czech/Polish/Hungarian extensible
 
 ## Installation
 
-### Recommended (clone directly into Claude Code skills directory)
-
 ```bash
-mkdir -p ~/.claude/skills
-git clone https://github.com/blader/humanizer.git ~/.claude/skills/humanizer
-```
-
-### Manual install/update (only the skill file)
-
-If you already have this repo cloned (or you downloaded `SKILL.md`), copy the skill file into Claude Code’s skills directory:
-
-```bash
-mkdir -p ~/.claude/skills/humanizer
-cp SKILL.md ~/.claude/skills/humanizer/
+git clone <fork-url> ~/.claude/skills/humanizer
 ```
 
 ## Usage
 
-In Claude Code, invoke the skill:
+In Claude Code, invoke when editing text that may sound AI-generated. The
+orchestrator decides which reference modules to load based on input
+characteristics (language, content type, length, input purity).
+
+Example invocations:
+
+- "Use the humanizer skill to clean up this LinkedIn post."
+- "Apply humanizer with Slovak language overlay."
+- "Run the humanizer pre-publish check on this Substack draft."
+
+## Structure
 
 ```
-/humanizer
-
-[paste your text here]
+~/.claude/skills/humanizer/
+├── SKILL.md                              # Workflow orchestrator (~200 lines)
+├── references/
+│   ├── pattern-catalog.md                # 24 base patterns (attributed)
+│   ├── transition-coherence.md           # Post-edit connective-tissue check
+│   ├── soul-toolkit.md                   # 6 techniques for adding voice
+│   ├── context-calibration.md            # Content type × length intensity matrix
+│   ├── hybrid-input.md                   # Three-way HUMAN / MIXED / AI tagging
+│   ├── detector-lens.md                  # Optional stylometric self-check
+│   └── language-overlay-slovak.md        # Slovak-specific maps/inverts
+├── LICENSE                               # MIT (unchanged from upstream)
+├── NOTICE                                # Full attribution
+├── README.md                             # This file
+├── CHANGELOG.md                          # Version history
+└── docs/
+    ├── specs/                            # Design documents
+    └── plans/                            # Implementation plans
 ```
 
-Or ask Claude to humanize text directly:
+## Workflow at a glance
 
-```
-Please humanize this text: [your text]
-```
+The orchestrator runs nine steps:
 
-## Overview
+0. Over-edit gate — if text reads naturally, stop
+1. Diagnose — language, content type, length, input purity
+2. Identify target voice — preserve signatures
+3. Scan for patterns — load pattern-catalog.md
+4. Rewrite problematic sections
+5. Transition coherence check
+6. Add soul where flat
+7. Anti-AI audit — cap at two passes
+8. Detector lens — optional, voice quality beats detector compliance
 
-Based on [Wikipedia's "Signs of AI writing"](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) guide, maintained by WikiProject AI Cleanup. This comprehensive guide comes from observations of thousands of instances of AI-generated text.
+## Sources
 
-The skill also includes a final "obviously AI generated" audit pass and a second rewrite, to catch lingering AI-isms in the first draft.
+- Wikipedia: [Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) (WikiProject AI Cleanup)
+- Kobak et al. (2024) — vocabulary frequency shifts
+- COLING 2025, Computational Linguistics 2025 survey — stylometric markers
+- Freeburg (2025) — em-dash empirical analysis
 
-### Key Insight from Wikipedia
-
-> "LLMs use statistical algorithms to guess what should come next. The result tends toward the most statistically likely result that applies to the widest variety of cases."
-
-## 25 Patterns Detected (with Before/After Examples)
-
-### Content Patterns
-
-| # | Pattern | Before | After |
-|---|---------|--------|-------|
-| 1 | **Significance inflation** | "marking a pivotal moment in the evolution of..." | "was established in 1989 to collect regional statistics" |
-| 2 | **Notability name-dropping** | "cited in NYT, BBC, FT, and The Hindu" | "In a 2024 NYT interview, she argued..." |
-| 3 | **Superficial -ing analyses** | "symbolizing... reflecting... showcasing..." | Remove or expand with actual sources |
-| 4 | **Promotional language** | "nestled within the breathtaking region" | "is a town in the Gonder region" |
-| 5 | **Vague attributions** | "Experts believe it plays a crucial role" | "according to a 2019 survey by..." |
-| 6 | **Formulaic challenges** | "Despite challenges... continues to thrive" | Specific facts about actual challenges |
-
-### Language Patterns
-
-| # | Pattern | Before | After |
-|---|---------|--------|-------|
-| 7 | **AI vocabulary** | "Additionally... testament... landscape... showcasing" | "also... remain common" |
-| 8 | **Copula avoidance** | "serves as... features... boasts" | "is... has" |
-| 9 | **Negative parallelisms** | "It's not just X, it's Y" | State the point directly |
-| 10 | **Rule of three** | "innovation, inspiration, and insights" | Use natural number of items |
-| 11 | **Synonym cycling** | "protagonist... main character... central figure... hero" | "protagonist" (repeat when clearest) |
-| 12 | **False ranges** | "from the Big Bang to dark matter" | List topics directly |
-
-### Style Patterns
-
-| # | Pattern | Before | After |
-|---|---------|--------|-------|
-| 13 | **Em dash overuse** | "institutions—not the people—yet this continues—" | Use commas or periods |
-| 14 | **Boldface overuse** | "**OKRs**, **KPIs**, **BMC**" | "OKRs, KPIs, BMC" |
-| 15 | **Inline-header lists** | "**Performance:** Performance improved" | Convert to prose |
-| 16 | **Title Case Headings** | "Strategic Negotiations And Partnerships" | "Strategic negotiations and partnerships" |
-| 17 | **Emojis** | "🚀 Launch Phase: 💡 Key Insight:" | Remove emojis |
-| 18 | **Curly quotes** | `said “the project”` | `said “the project”` |
-| 25 | **Hyphenated word pairs** | “cross-functional, data-driven, client-facing” | Drop hyphens on common word pairs |
-
-### Communication Patterns
-
-| # | Pattern | Before | After |
-|---|---------|--------|-------|
-| 19 | **Chatbot artifacts** | "I hope this helps! Let me know if..." | Remove entirely |
-| 20 | **Cutoff disclaimers** | "While details are limited in available sources..." | Find sources or remove |
-| 21 | **Sycophantic tone** | "Great question! You're absolutely right!" | Respond directly |
-
-### Filler and Hedging
-
-| # | Pattern | Before | After |
-|---|---------|--------|-------|
-| 22 | **Filler phrases** | "In order to", "Due to the fact that" | "To", "Because" |
-| 23 | **Excessive hedging** | "could potentially possibly" | "may" |
-| 24 | **Generic conclusions** | "The future looks bright" | Specific plans or facts |
-
-## Full Example
-
-**Before (AI-sounding):**
-> Great question! Here is an essay on this topic. I hope this helps!
->
-> AI-assisted coding serves as an enduring testament to the transformative potential of large language models, marking a pivotal moment in the evolution of software development. In today's rapidly evolving technological landscape, these groundbreaking tools—nestled at the intersection of research and practice—are reshaping how engineers ideate, iterate, and deliver, underscoring their vital role in modern workflows.
->
-> At its core, the value proposition is clear: streamlining processes, enhancing collaboration, and fostering alignment. It's not just about autocomplete; it's about unlocking creativity at scale, ensuring that organizations can remain agile while delivering seamless, intuitive, and powerful experiences to users. The tool serves as a catalyst. The assistant functions as a partner. The system stands as a foundation for innovation.
->
-> Industry observers have noted that adoption has accelerated from hobbyist experiments to enterprise-wide rollouts, from solo developers to cross-functional teams. The technology has been featured in The New York Times, Wired, and The Verge. Additionally, the ability to generate documentation, tests, and refactors showcases how AI can contribute to better outcomes, highlighting the intricate interplay between automation and human judgment.
->
-> - 💡 **Speed:** Code generation is significantly faster, reducing friction and empowering developers.
-> - 🚀 **Quality:** Output quality has been enhanced through improved training, contributing to higher standards.
-> - ✅ **Adoption:** Usage continues to grow, reflecting broader industry trends.
->
-> While specific details are limited based on available information, it could potentially be argued that these tools might have some positive effect. Despite challenges typical of emerging technologies—including hallucinations, bias, and accountability—the ecosystem continues to thrive. In order to fully realize this potential, teams must align with best practices.
->
-> In conclusion, the future looks bright. Exciting times lie ahead as we continue this journey toward excellence. Let me know if you’d like me to expand on any section!
-
-**After (Humanized):**
-> AI coding assistants can speed up the boring parts of the job. They're great at boilerplate: config files and the little glue code you don't want to write. They can also help you sketch a test, but you still have to read it.
->
-> The dangerous part is how confident the suggestions look. I've accepted code that compiled and passed lint, then discovered later it missed the point because I stopped paying attention.
->
-> If you treat it like autocomplete and review every line, it's useful. If you use it to avoid thinking, it will help you ship bugs faster.
->
-> The only real backstop is tests. Without them, you're mostly judging vibes.
-
-## References
-
-- [Wikipedia: Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) - Primary source
-- [WikiProject AI Cleanup](https://en.wikipedia.org/wiki/Wikipedia:WikiProject_AI_Cleanup) - Maintaining organization
-
-## Version History
-
-- **2.3.0** - Added pattern #25: hyphenated word pair overuse
-- **2.2.0** - Added a final "obviously AI generated" audit + second-pass rewrite prompts
-- **2.1.1** - Fixed pattern #18 example (curly quotes vs straight quotes)
-- **2.1.0** - Added before/after examples for all 24 patterns
-- **2.0.0** - Complete rewrite based on raw Wikipedia article content
-- **1.0.0** - Initial release
+See [NOTICE](NOTICE) for full citation list.
 
 ## License
 
-MIT
+MIT. See [LICENSE](LICENSE) and [NOTICE](NOTICE).

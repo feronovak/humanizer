@@ -38,7 +38,7 @@ All notable changes to the humanizer skill.
 ## [2.4.0] — 2026-05-14
 
 ### Added
-- "What research shows" section with empirical citations (Kobak et al. 2024, COLING 2025, CL 2025 survey, Freeburg 2025)
+- "What research shows" section with empirical citations (Kobak et al. 2024, COLING 2025, CL 2025 survey, Freeburg 2025 blog research)
 - Pattern 25: Uniform Sentence Rhythm — top stylometric discriminator beyond perplexity
 - Pattern 7 (AI vocabulary): research-validated focal words split from context-dependent words
 

@@ -21,7 +21,7 @@ Detection studies (Kobak et al. 2024, COLING 2025, Computational Linguistics 202
 
 1. **Vocabulary frequency shifts** — *delve, underscore, tapestry, intricate, showcase, meticulous, boast, commendable, surpass, unlocking, pivotal* spiked sharply post-2022 (Z>3.5 in 2024).
 2. **Sentence-length uniformity** — top stylometric discriminator beyond perplexity. Humans cluster at extremes; LLMs cluster at moderate length.
-3. **Em-dash frequency** — GPT-4.1 uses ~3.28× human baseline (Freeburg 2025). GPT-5.1 suppresses by default.
+3. **Em-dash frequency** — GPT-4.1 uses ~3.28× human baseline (blog research, Freeburg, reported via McGill OSS 2025). GPT-5.1 suppresses by default.
 4. **Narrower vocabulary, synonym cycling** — LLMs have higher repetition penalty.
 5. **Lower emotional range** — fewer question/exclamation marks, more formal register.
 

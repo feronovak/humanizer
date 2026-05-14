@@ -79,7 +79,7 @@ The orchestrator runs nine steps:
 - Wikipedia: [Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) (WikiProject AI Cleanup)
 - Kobak et al. (2024) — vocabulary frequency shifts
 - COLING 2025, Computational Linguistics 2025 survey — stylometric markers
-- Freeburg (2025) — em-dash empirical analysis
+- Freeburg (2025) — em-dash blog research (reported via McGill OSS 2025; no formal publication)
 
 See [NOTICE](NOTICE) for full citation list.
 

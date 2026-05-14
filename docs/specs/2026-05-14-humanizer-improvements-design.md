@@ -19,7 +19,7 @@ Per session decision: **Option C — voice quality first, detector check only if
 
 ## Research findings (summary)
 
-Empirical detection studies (Kobak et al. 2024, COLING 2025, Computational Linguistics 2025 survey, Freeburg 2025) and commercial detector documentation converge on five signals:
+Empirical detection studies (Kobak et al. 2024, COLING 2025, Computational Linguistics 2025 survey) and commercial detector documentation converge on five signals, with additional blog research (Freeburg, reported via McGill OSS 2025) on em-dash frequency:
 
 1. **Vocabulary frequency shifts.** Z-score >3.5 in 2024 for *delve, underscore, tapestry, intricate, showcase, meticulous, boast, commendable, surpass, unlocking, pivotal*.
 2. **Sentence-length uniformity.** Top stylometric discriminator beyond perplexity.

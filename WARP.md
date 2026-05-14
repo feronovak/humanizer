@@ -3,29 +3,32 @@
 This file provides guidance to WARP (warp.dev) when working with code in this repository.
 
 ## What this repo is
-This repository is a **Claude Code skill** implemented entirely as Markdown.
+This repository is a **Claude Code skill** with a modular v3 structure.
 
 The “runtime” artifact is `SKILL.md`: Claude Code reads the YAML frontmatter (metadata + allowed tools) and the prompt/instructions that follow.
 
 `README.md` is for humans: installation, usage, and a compact overview of the patterns.
 
+Supporting material lives in subdirectories:
+- `docs/` — design specs and implementation plans
+- `references/` — pattern catalog and detector lens reference
+
 ## Key files (and how they relate)
-- `SKILL.md`
-  - The actual skill definition.
-  - Starts with YAML frontmatter (`---` … `---`) containing `name`, `version`, `description`, and `allowed-tools`.
-  - After the frontmatter is the editor prompt: the canonical, detailed pattern list with examples.
-- `README.md`
-  - Installation and usage instructions.
-  - Contains a summarized “24 patterns” table and a short version history.
+- `SKILL.md` — the actual skill definition. Starts with YAML frontmatter (`---` ... `---`) containing `name`, `version`, `description`, and `allowed-tools`. After the frontmatter is the editor prompt: the canonical, detailed pattern list with examples.
+- `README.md` — installation and usage instructions. Contains a summarized patterns table and a short version history.
+- `references/pattern-catalog.md` — detailed pattern reference with before/after examples.
+- `references/detector-lens.md` — commercial AI detector signal reference for final-pass checks.
+- `CHANGELOG.md` — version history.
+- `NOTICE` — full citation list with source notes.
 
 When changing behavior/content, treat `SKILL.md` as the source of truth, and update `README.md` to stay consistent.
 
 ## Common commands
 ### Install the skill into Claude Code
-Recommended (clone directly into Claude Code skills directory):
+Recommended (clone the fork directly into Claude Code skills directory):
 ```bash
 mkdir -p ~/.claude/skills
-git clone https://github.com/blader/humanizer.git ~/.claude/skills/humanizer
+git clone https://github.com/feronovak/humanizer.git ~/.claude/skills/humanizer
 ```
 
 Manual install/update (only the skill file):

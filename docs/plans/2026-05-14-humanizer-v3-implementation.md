@@ -180,7 +180,7 @@ Detection studies (Kobak et al. 2024, COLING 2025, Computational Linguistics 202
 
 1. **Vocabulary frequency shifts** — *delve, underscore, tapestry, intricate, showcase, meticulous, boast, commendable, surpass, unlocking, pivotal* spiked sharply post-2022 (Z>3.5 in 2024).
 2. **Sentence-length uniformity** — top stylometric discriminator beyond perplexity. Humans cluster at extremes; LLMs cluster at moderate length.
-3. **Em-dash frequency** — GPT-4.1 uses ~3.28× human baseline (Freeburg 2025). GPT-5.1 suppresses by default.
+3. **Em-dash frequency** — GPT-4.1 uses ~3.28× human baseline (blog research, Freeburg, reported via McGill OSS 2025). GPT-5.1 suppresses by default.
 4. **Narrower vocabulary, synonym cycling** — LLMs have higher repetition penalty.
 5. **Lower emotional range** — fewer question/exclamation marks, more formal register.
 
@@ -977,7 +977,7 @@ Research sources cited:
 - Muñoz-Ortiz et al. "Contrasting Linguistic Patterns in Human and
   LLM-Generated News Text." PMC11422446.
 - "Delving Into PubMed Records." Perspectives on Medical Education, 2024.
-- Freeburg (2025) "Em dash frequency analysis across GPT model generations."
+- Freeburg (2025) "Em dash frequency analysis across GPT model generations." [blog research, reported via McGill OSS 2025; no formal publication identifier]
 
 
 License:
@@ -1102,7 +1102,7 @@ The orchestrator runs nine steps:
 - Wikipedia: [Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing) (WikiProject AI Cleanup)
 - Kobak et al. (2024) — vocabulary frequency shifts
 - COLING 2025, Computational Linguistics 2025 survey — stylometric markers
-- Freeburg (2025) — em-dash empirical analysis
+- Freeburg (2025) — em-dash blog research (reported via McGill OSS 2025; no formal publication)
 
 See [NOTICE](NOTICE) for full citation list.
 
@@ -1179,7 +1179,7 @@ All notable changes to the humanizer skill.
 ## [2.4.0] — 2026-05-14
 
 ### Added
-- "What research shows" section with empirical citations (Kobak et al. 2024, COLING 2025, CL 2025 survey, Freeburg 2025)
+- "What research shows" section with empirical citations (Kobak et al. 2024, COLING 2025, CL 2025 survey, Freeburg 2025 blog research)
 - Pattern 25: Uniform Sentence Rhythm — top stylometric discriminator beyond perplexity
 - Pattern 7 (AI vocabulary): research-validated focal words split from context-dependent words
 

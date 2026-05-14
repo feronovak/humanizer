@@ -1,0 +1,69 @@
+humanizer skill
+===============
+
+This skill is a fork of blader/humanizer (MIT licensed, Copyright (c) 2025
+Siqi Chen) extended with original work by Fero Novak.
+
+Upstream:        https://github.com/blader/humanizer
+Fork started:    2026-05-14
+Current version: 3.0.0
+
+
+Pattern catalog source (references/pattern-catalog.md):
+-------------------------------------------------------
+
+- Patterns 1-24: blader/humanizer, ultimately derived from Wikipedia's
+  "Signs of AI writing" page (WikiProject AI Cleanup, CC BY-SA).
+- Pattern 7 (AI vocabulary) refined in humanizer v2.4.0 by F. Novak —
+  research-validated vs context-dependent split based on Kobak et al. 2024.
+- Pattern 25 (Uniform Sentence Rhythm) added in humanizer v2.4.0 by F. Novak,
+  grounded in Computational Linguistics 2025 survey.
+- Removed in v2.4.0: original pattern 25 "Hyphenated Word Pair Overuse"
+  (no empirical support; produced grammatically worse output).
+
+
+Original work by F. Novak (MIT licensed, included in this repository):
+----------------------------------------------------------------------
+
+- SKILL.md orchestrator (v3.0.0 workflow design)
+- references/transition-coherence.md
+- references/soul-toolkit.md
+- references/context-calibration.md
+- references/hybrid-input.md
+- references/detector-lens.md
+- references/language-overlay-slovak.md
+- "What research shows" section in SKILL.md
+- Over-edit gate (Step 0)
+- Voice-ID step (Step 2) with bidirectional ESL awareness
+- Two-pass cap (Step 7) preventing homogenization spiral
+- Modular architecture (orchestrator + references) replacing v2.x monolith
+
+
+Research sources cited:
+-----------------------
+
+- Kobak, D., González-Márquez, R., Horvát, E.-Á., & Lause, J. (2024).
+  "Delving into ChatGPT usage in academic writing through excess vocabulary."
+  arXiv:2406.07016.
+- "Why Does ChatGPT Delve So Much? Exploring the Sources of Lexical
+  Overrepresentation in Large Language Models." COLING 2025
+  (ACL Anthology 2025.coling-main.426).
+- Wu, J., Yang, S., Zhan, R., Yuan, Y., Chao, L. S., & Wong, D. F. (2025).
+  "A Survey on LLM-Generated Text Detection: Necessity, Methods, and Future
+  Directions." Computational Linguistics 51(1), MIT Press.
+- Muñoz-Ortiz, A., Gómez-Rodríguez, C., & Vilares, D.
+  "Contrasting Linguistic Patterns in Human and LLM-Generated News Text."
+  PMC11422446.
+- "Delving Into PubMed Records: How AI-Influenced Vocabulary has Transformed
+  Medical Writing since ChatGPT." Perspectives on Medical Education, 2024.
+- Freeburg (2025). "Em dash frequency analysis across GPT model generations."
+
+
+License:
+--------
+
+All work in this repository is licensed under MIT. See LICENSE for full text.
+Original copyright (c) 2025 Siqi Chen. Additions copyright (c) 2026 Fero Novak.
+
+Permission to use, copy, modify, merge, publish, distribute, sublicense
+under MIT — see LICENSE file.

@@ -1,13 +1,7 @@
 ---
 name: humanizer
-version: 2.3.0
-description: |
-  Remove signs of AI-generated writing from text. Use when editing or reviewing
-  text to make it sound more natural and human-written. Based on Wikipedia's
-  comprehensive "Signs of AI writing" guide. Detects and fixes patterns including:
-  inflated symbolism, promotional language, superficial -ing analyses, vague
-  attributions, em dash overuse, rule of three, AI vocabulary words, negative
-  parallelisms, and excessive conjunctive phrases.
+version: 2.5.0
+description: Use when editing or reviewing text that may sound AI-generated, robotic, or sterile — especially before publishing persona content, marketing copy, or LLM-assisted drafts. Grounded in detection research (Kobak et al. 2024, COLING 2025) and Wikipedia's WikiProject AI Cleanup. English-tuned; many markers do not map to other languages.
 allowed-tools:
   - Read
   - Write
@@ -19,18 +13,42 @@ allowed-tools:
 
 # Humanizer: Remove AI Writing Patterns
 
-You are a writing editor that identifies and removes signs of AI-generated text to make writing sound more natural and human. This guide is based on Wikipedia's "Signs of AI writing" page, maintained by WikiProject AI Cleanup.
+You are a writing editor that identifies and removes signs of AI-generated text to make writing sound more natural and human. This guide draws on Wikipedia's "Signs of AI writing" (WikiProject AI Cleanup) and empirical detection research.
+
+## What research shows
+
+Recent detection studies converge on a small set of high-signal markers:
+
+1. **Vocabulary frequency shifts.** Kobak et al. (2024, *Delving into ChatGPT usage in academic writing through excess vocabulary*) and the PubMed Z-score analysis identify focal words with sharp post-2022 spikes (Z>3.5 in 2024): *delve, underscore, tapestry, intricate, showcase, meticulous, boast, commendable, surpass, unlocking, pivotal, garner, fostering*. Estimated ~13.5% of 2024 biomedical abstracts processed with LLMs.
+2. **Sentence-length uniformity.** Beyond perplexity, average sentence length and POS-bigram frequency are the most important stylometric discriminators (Computational Linguistics 2025 survey; Pangram Labs 2024). Humans cluster at extremes — short punchy, then long winding. LLMs cluster at moderate length.
+3. **Em-dash frequency.** GPT-4.1 uses em dashes ~3.28× human baseline; GPT-4o was ~10× GPT-3.5 (Freeburg 2025). GPT-5.1 suppresses by default — markers are model-version dependent.
+4. **Narrower vocabulary, more synonym cycling.** LLMs have higher repetition penalty, producing "the protagonist / the hero / the central figure" patterns within a passage.
+5. **Lower emotional range.** Fewer question marks, exclamation marks, ellipses; more formal register; fewer first-person reactions.
+
+**Caveats (read these before flagging anything):**
+
+- **No single marker is proof.** Many experienced human writers use em dashes heavily. Vocabulary tells need *frequency*, not single occurrences.
+- **ESL bias.** Non-native English writers naturally produce lower-perplexity, more uniform text — they get false-positive flagged by automated detectors. Apply judgment.
+- **Models adapt.** Em-dash suppression in GPT-5.1 means relying on punctuation will miss newer outputs. Combine markers, do not rely on any one.
+- **Language scope.** This skill is English-tuned. Em dashes, copula avoidance (#8), curly quotes (#18), and most vocabulary tells do not map directly to Slovak, German, Czech, etc. For non-English text, treat the catalog as suggestion, not checklist.
 
 ## Your Task
 
 When given text to humanize:
 
-1. **Identify AI patterns** - Scan for the patterns listed below
-2. **Rewrite problematic sections** - Replace AI-isms with natural alternatives
-3. **Preserve meaning** - Keep the core message intact
-4. **Maintain voice** - Match the intended tone (formal, casual, technical, etc.)
-5. **Add soul** - Don't just remove bad patterns; inject actual personality
-6. **Do a final anti-AI pass** - Prompt: "What makes the below so obviously AI generated?" Answer briefly with remaining tells, then prompt: "Now make it not obviously AI generated." and revise
+0. **Decide whether to edit at all.** If the text already reads naturally — sentence variance present, no vocabulary clusters, no significance inflation — declare it clean and stop. Reflexive editing produces homogenized output, which is its own AI tell. Single-pattern issues get a single-pattern fix; do not rewrite the rest "for consistency."
+
+1. **Identify the target voice.** Ask if not told: which persona, brand, or author? Voice signatures take precedence over the pattern catalog. If the writer's natural voice uses a flagged pattern (em dashes for an essayist, "key" as a verb for an engineer, long sentences with semicolons), leave it. Goal: make the text sound like its writer with AI-isms gone — not standardize voice across personas.
+
+2. **Identify AI patterns.** Scan for the patterns below. A cluster of 3+ items from #7's focal list in one paragraph is high-signal. Isolated single matches usually are not.
+
+3. **Rewrite problematic sections.** Replace AI-isms with natural alternatives that fit the target voice from Step 1.
+
+4. **Preserve meaning and facts.** Keep the core message intact. Do not invent details (names, statistics, citations) to sound "more human" — that creates a different problem.
+
+5. **Add soul where flat.** Don't just remove bad patterns; inject opinions, varied rhythm, first-person where it fits the voice.
+
+6. **Final anti-AI pass — cap at two.** Prompt: "What makes the below so obviously AI generated?" Answer briefly with remaining tells, then prompt: "Now make it not obviously AI generated." and revise. **Stop after this pass.** Further iteration produces homogenized "humanized" slop.
 
 
 ## PERSONALITY AND SOUL
@@ -150,9 +168,13 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 
 ### 7. Overused "AI Vocabulary" Words
 
-**High-frequency AI words:** Additionally, align with, crucial, delve, emphasizing, enduring, enhance, fostering, garner, highlight (verb), interplay, intricate/intricacies, key (adjective), landscape (abstract noun), pivotal, showcase, tapestry (abstract noun), testament, underscore (verb), valuable, vibrant
+**Research-validated focal words** (Kobak et al. 2024; PubMed Z-score >3.5 in 2024 vs. pre-ChatGPT baseline): *delve, underscore, tapestry, intricate/intricacies, showcase, meticulous, boast, commendable, surpass, unlocking, pivotal, enduring, garner, fostering, testament, vibrant, align with*
 
-**Problem:** These words appear far more frequently in post-2023 text. They often co-occur.
+**Context-dependent tells** (flag only when co-occurring with at least one other pattern from this skill — these words are normal English on their own): *Additionally, crucial, emphasizing, enhance, interplay, landscape* (as abstract noun)
+
+**Deliberately not flagged:** *key, valuable, highlight* — generic English; flagging them homogenizes legitimate writing and produces over-zealous edits.
+
+**Problem:** These words appear far more frequently in post-2023 text and tend to co-occur. A single instance proves nothing; clustering of three or more from the focal list in a paragraph is a stronger signal.
 
 **Before:**
 > Additionally, a distinctive feature of Somali cuisine is the incorporation of camel meat. An enduring testament to Italian colonial influence is the widespread adoption of pasta in the local culinary landscape, showcasing how these dishes have integrated into the traditional diet.
@@ -364,36 +386,75 @@ Avoiding AI patterns is only half the job. Sterile, voiceless writing is just as
 > The company plans to open two more locations next year.
 
 
-### 25. Hyphenated Word Pair Overuse
+### 25. Uniform Sentence Rhythm
 
-**Words to watch:** third-party, cross-functional, client-facing, data-driven, decision-making, well-known, high-quality, real-time, long-term, end-to-end
+**Words to watch:** N/A — this is structural, not lexical.
 
-**Problem:** AI hyphenates common word pairs with perfect consistency. Humans rarely hyphenate these uniformly, and when they do, it's inconsistent. Less common or technical compound modifiers are fine to hyphenate.
+**Problem:** Sentence-length variance is one of the strongest empirical discriminators between human and LLM text (Computational Linguistics 2025 survey; Pangram Labs 2024). LLMs cluster around moderate length (15–25 words) and rarely deviate. Humans cluster at extremes — short punchy sentences, then long winding ones with multiple clauses.
 
-**Before:**
-> The cross-functional team delivered a high-quality, data-driven report on our client-facing tools. Their decision-making process was well-known for being thorough and detail-oriented.
+**Diagnostic:** If five consecutive sentences fall within ±5 words of each other, you have a rhythm problem. Read it aloud. If your breath pattern stays the same the whole way through, the rhythm is flat.
 
-**After:**
-> The cross functional team delivered a high quality, data driven report on our client facing tools. Their decision making process was known for being thorough and detail oriented.
+**Before (uniform 18–22 words):**
+> The product launched in March after eighteen months of development work. The team had been iterating on the core feature set since the previous summer. Early customer feedback has been generally positive across most segments. Sales performance exceeded the initial internal forecast for the first quarter. The roadmap for the next six months focuses on enterprise readiness.
+
+**After (variance restored):**
+> The product launched in March. Eighteen months of work behind it, three rewrites, one team change — and it landed. Sales beat the forecast, not by a small margin. Customers like it, mostly. The next six months are about enterprise readiness, which is the boring word for what we actually need: SSO, audit logs, and people who pick up the phone.
+
+---
+
+## Language overlay: Slovak
+
+The default catalog is English-tuned. For Slovak text, apply with these adjustments. *(Heuristic, not corpus-validated — no equivalent of Kobak et al. exists for Slovak yet. Treat as starting hypotheses, not verdicts.)*
+
+**Maps directly:**
+
+- **#1 Significance inflation** — Slovak forms: *predstavuje míľnik, znamená zlom, kľúčový moment, prelomový, výrazne formuje, neoddeliteľná súčasť, zohráva dôležitú úlohu*
+- **#3 Superficial -ing analyses** — Slovak transgressives: *zdôrazňujúc, ukazujúc, podčiarkujúc, odrážajúc, prispievajúc k*
+- **#4 Promotional language** — *pôvabný, prekrásny, jedinečný, mimoriadny, neúnavný, fascinujúci, výnimočný*
+- **#7 Vocabulary tells** (Slovak equivalents): *vyzdvihuje, podčiarkuje, predstavuje, tvorí, neúnavný, mimoriadny, kľúčový, prelomový, fascinujúci, neoceniteľný, nenahraditeľný*
+- **#8 Copula avoidance** — Slovak version replaces *je/sú* with *predstavuje, slúži ako, tvorí, znamená, zastáva úlohu*
+- **#9 Negative parallelisms** — *Nielen že..., ale aj...; Nie je to len o..., je to o...*
+- **#10 Rule of three** — maps directly
+- **#19 Chatbot artifacts** — *Dúfam, že to pomôže!, Samozrejme!, Určite!, Rád pomôžem!, Ak by ste potrebovali viac...*
+- **#22 Filler phrases** — *Je dôležité poznamenať, že...; V dnešnej dobe...; V neposlednom rade...; S cieľom dosiahnuť...*
+- **#24 Generic positive conclusions** — *Budúcnosť vyzerá sľubne; Pred nami sú vzrušujúce časy; Pokračujeme v ceste za excelentnosťou*
+
+**Does not map / inverts:**
+
+- **#16 Title case in headings** — Slovak uses sentence case by default. AI-generated title case (*"Strategické Rokovania A Globálne Partnerstvá"*) is even more obvious as a tell than in English.
+- **#18 Curly quotes** — Slovak convention is „bottom-top" („...") not "...". Straight quotes are the AI tell here, not curly ones.
+- **#13 Em dashes** — used in Slovak (pomlčka) but historically less frequently than English. Same overuse pattern applies; trigger threshold is lower.
+
+**Slovak-specific tells (not in main catalog):**
+
+- **Conjunction overload at paragraph starts** — *Navyše, Zároveň, Okrem toho, Taktiež, Avšak* opening every other paragraph
+- **Genitive noun stacking** — *transformácia digitalizácie procesov modernizácie verejnej správy* (chain of four+ genitives = AI signature)
+- **Passive-overuse with *byť* + past participle** — *bolo zaznamenané, bolo zistené, bolo poukázané na...* in contexts where active voice fits
+- **Anglicism leak in formal text** — *implementácia, optimalizácia, leverage-ovať, deliverable* where native Slovak verbs exist (*zaviesť, vyladiť, využiť*)
+
+**For Czech / Polish / Hungarian:** the Slovak overlay is a reasonable starting hypothesis for Czech (similar morphology, same Central European register tells). Polish and Hungarian need their own work — copula behavior, case systems, and conjunction patterns differ enough that direct mapping will misfire.
 
 ---
 
 ## Process
 
-1. Read the input text carefully
-2. Identify all instances of the patterns above
-3. Rewrite each problematic section
-4. Ensure the revised text:
+0. **Apply the over-edit gate.** If text already reads naturally, declare clean and stop. (See Your Task, Step 0.)
+1. Identify the target voice — persona, brand, or generic author.
+2. Read the input text carefully
+3. Identify all instances of the patterns above
+4. Rewrite each problematic section
+5. Ensure the revised text:
    - Sounds natural when read aloud
    - Varies sentence structure naturally
    - Uses specific details over vague claims
    - Maintains appropriate tone for context
    - Uses simple constructions (is/are/has) where appropriate
-5. Present a draft humanized version
-6. Prompt: "What makes the below so obviously AI generated?"
-7. Answer briefly with the remaining tells (if any)
-8. Prompt: "Now make it not obviously AI generated."
-9. Present the final version (revised after the audit)
+   - Preserves the target voice's signature traits (Step 1)
+6. Present a draft humanized version
+7. Prompt: "What makes the below so obviously AI generated?"
+8. Answer briefly with the remaining tells (if any)
+9. Prompt: "Now make it not obviously AI generated."
+10. Present the final version (revised after the audit). **Stop here** — no third pass.
 
 ## Output Format
 
@@ -469,6 +530,15 @@ Provide:
 
 ## Reference
 
-This skill is based on [Wikipedia:Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing), maintained by WikiProject AI Cleanup. The patterns documented there come from observations of thousands of instances of AI-generated text on Wikipedia.
+**Primary catalog:** [Wikipedia:Signs of AI writing](https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing), maintained by WikiProject AI Cleanup. Patterns documented from observations of thousands of instances of AI-generated text on Wikipedia.
 
-Key insight from Wikipedia: "LLMs use statistical algorithms to guess what should come next. The result tends toward the most statistically likely result that applies to the widest variety of cases."
+**Empirical grounding:**
+
+- Kobak, D., González-Márquez, R., Horvát, E.-Á., & Lause, J. (2024). *Delving into ChatGPT usage in academic writing through excess vocabulary.* arXiv:2406.07016. — Identifies 21 focal vocabulary words with sharp post-2022 frequency increases in scientific abstracts; estimates ~13.5% of 2024 biomedical abstracts processed with LLMs.
+- *Why Does ChatGPT "Delve" So Much? Exploring the Sources of Lexical Overrepresentation in Large Language Models.* COLING 2025 (ACL Anthology 2025.coling-main.426).
+- *Delving Into PubMed Records: How AI-Influenced Vocabulary has Transformed Medical Writing since ChatGPT.* Perspectives on Medical Education, 2024. — Tracks Z-score >3.5 for 103 terms in 2024 vs. pre-ChatGPT baseline.
+- Wu, J., Yang, S., Zhan, R., Yuan, Y., Chao, L. S., & Wong, D. F. (2025). *A Survey on LLM-Generated Text Detection: Necessity, Methods, and Future Directions.* Computational Linguistics 51(1). — LLM text characteristics: ~2× human length, narrower vocabulary, more deterministic syntactic structures.
+- Muñoz-Ortiz, A., Gómez-Rodríguez, C., & Vilares, D. *Contrasting Linguistic Patterns in Human and LLM-Generated News Text.* PMC11422446. — Humans: more scattered sentence-length distributions, shorter constituents, more emotional punctuation.
+- Freeburg, J. (2025). *Em dash frequency analysis across GPT model generations.* — GPT-4.1 = 3.28× human baseline; GPT-4o ~10× GPT-3.5; GPT-5.1 suppresses by default. (Independent research, reported via McGill OSS and The Conversation.)
+
+**Key insight:** LLMs use statistical algorithms to guess what comes next. Output tends toward the most statistically likely result across the widest variety of cases — which is why detection markers exist at all, and why no single marker is sufficient.
